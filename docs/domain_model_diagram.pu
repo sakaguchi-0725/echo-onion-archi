@@ -1,0 +1,42 @@
+@startuml domain
+
+package "Book集約" {
+    object Book {
+        +ID: UUID
+        +Title: string
+        +Author: string
+        +Category: CategoryID
+        +Status: string  ' (Available, Loaned, Reserved)
+    }
+
+    object Category {
+        ID: uint,
+        Name: string
+    }
+}
+
+package "User集約" {
+    object User {
+        +ID: UUID
+        +Name: string
+        +Email: string
+        +Password: string
+        +Role: string  ' (Admin, General)
+    }
+}
+
+package "Loan集約" {
+    object Loan {
+        +ID: UUID
+        +BookID: UUID
+        +UserID: UUID
+        +LoanDate: date
+        +ReturnDate: date
+        +Status: string  ' (Borrowed, Returned)
+    }
+}
+
+Loan::UserID "1" -- "N" User::ID
+Loan::BookID "N" -- "1" Book::ID
+Category::ID "1" -- "1" Book::CategoryID
+@enduml

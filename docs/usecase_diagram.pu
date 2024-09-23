@@ -1,0 +1,21 @@
+@startuml usecase
+left to right direction
+
+actor "ユーザー" as User
+actor "管理者" as Admin
+
+frame "書籍管理アプリ" {
+    Admin --> (本を登録)
+    Admin --> (本を編集)
+    Admin --> (本を削除)
+    User --> (本を検索)
+    Admin --> (カテゴリを管理)
+    User --> (本を貸出)
+    User --> (本を返却)
+    User --> (本の詳細閲覧)
+    User --> (貸出履歴の確認)
+
+    Admin --> (ユーザー管理)
+}
+
+@enduml
