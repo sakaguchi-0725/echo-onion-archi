@@ -59,7 +59,7 @@ func TestUserFactory_CreateNewUser_InvalidUserRole(t *testing.T) {
 	user, err := userFactory.CreateNewUser("John Doe", "john@example.com", "invalid_role")
 
 	assert.Error(t, err)
-	assert.EqualError(t, err, "invalid user role: invalid_role")
+	assert.EqualError(t, err, "invalid user role")
 	assert.Equal(t, model.User{}, user)
 }
 
