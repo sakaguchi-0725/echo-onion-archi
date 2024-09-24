@@ -1,3 +1,5 @@
+//go:generate mockgen -source=book_repository.go -destination=../../mocks/domain/repository/mock_book_repository.go -package=mocks
+
 package repository
 
 import "github.com/sakaguchi-0725/echo-onion-arch/domain/model"
