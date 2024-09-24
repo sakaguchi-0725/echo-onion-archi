@@ -8,7 +8,7 @@ import (
 )
 
 type UserFactory interface {
-	CreateNewUser(name, email, password, role string) (model.User, error)
+	CreateNewUser(name, email, role string) (model.User, error)
 }
 
 type userFactory struct {
@@ -19,7 +19,7 @@ func NewUserFactory(userService service.UserService) UserFactory {
 	return &userFactory{userService}
 }
 
-func (f *userFactory) CreateNewUser(name, email, password, role string) (model.User, error) {
+func (f *userFactory) CreateNewUser(name, email, role string) (model.User, error) {
 	id := model.GenerateNewUserID()
 
 	isUnique, err := f.userService.IsEmailUnique(email)
@@ -36,7 +36,7 @@ func (f *userFactory) CreateNewUser(name, email, password, role string) (model.U
 		return model.User{}, err
 	}
 
-	user, err := model.NewUser(id, name, email, password, userRole)
+	user, err := model.NewUser(id, name, email, userRole)
 	if err != nil {
 		return model.User{}, err
 	}

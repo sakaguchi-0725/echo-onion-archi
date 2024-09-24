@@ -3,14 +3,13 @@ package model
 import "errors"
 
 type User struct {
-	ID       UserID
-	Name     string
-	Email    string
-	Password string
-	Role     UserRole
+	ID    UserID
+	Name  string
+	Email string
+	Role  UserRole
 }
 
-func NewUser(id UserID, name, email, password string, role UserRole) (User, error) {
+func NewUser(id UserID, name, email string, role UserRole) (User, error) {
 	if name == "" {
 		return User{}, errors.New("name is required")
 	}
@@ -23,25 +22,19 @@ func NewUser(id UserID, name, email, password string, role UserRole) (User, erro
 		return User{}, errors.New("email is required")
 	}
 
-	if password == "" {
-		return User{}, errors.New("password is required")
-	}
-
 	return User{
-		ID:       id,
-		Name:     name,
-		Email:    email,
-		Password: password,
-		Role:     role,
+		ID:    id,
+		Name:  name,
+		Email: email,
+		Role:  role,
 	}, nil
 }
 
-func RecreateUser(id UserID, name, email, password string, role UserRole) User {
+func RecreateUser(id UserID, name, email string, role UserRole) User {
 	return User{
-		ID:       id,
-		Name:     name,
-		Email:    email,
-		Password: password,
-		Role:     role,
+		ID:    id,
+		Name:  name,
+		Email: email,
+		Role:  role,
 	}
 }
