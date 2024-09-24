@@ -17,8 +17,8 @@ type TestDBConfig struct {
 }
 
 func NewTestDBConfig() *TestDBConfig {
-	if err := godotenv.Load(); err != nil {
-		log.Println(".envファイルが見つかりませんでしたが、処理を続行します")
+	if err := godotenv.Load("../../.env"); err != nil {
+		log.Println(".env is not found")
 	}
 
 	return &TestDBConfig{
