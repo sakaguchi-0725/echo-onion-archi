@@ -1,3 +1,5 @@
+//go:generate mockgen -source=user_factory.go -destination=../../mocks/domain/factory/mock_user_factory.go -package=mocks
+
 package factory
 
 import (
