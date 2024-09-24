@@ -1,3 +1,5 @@
+//go:generate mockgen -source=user_service.go -destination=../../mocks/domain/service/mock_user_service.go -package=mocks
+
 package service
 
 import "github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
