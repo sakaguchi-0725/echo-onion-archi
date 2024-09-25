@@ -1,0 +1,9 @@
+development:
+  dialect: postgres
+  datasource: "postgres://postgres:postgres@db:5432/book_loan?sslmode=disable"
+  dir: migrations
+
+test:
+  dialect: postgres
+  datasource: "postgres://postgres:postgres@test_db:5432/book_loan?sslmode=disable"
+  dir: migrations
