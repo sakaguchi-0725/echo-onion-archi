@@ -35,7 +35,7 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // DeleteByID mocks base method.
-func (m *MockUserRepository) DeleteByID(id model.User) error {
+func (m *MockUserRepository) DeleteByID(id model.UserID) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteByID", id)
 	ret0, _ := ret[0].(error)
@@ -94,16 +94,16 @@ func (mr *MockUserRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call 
 }
 
 // Insert mocks base method.
-func (m *MockUserRepository) Insert(user model.User) (model.UserID, error) {
+func (m *MockUserRepository) Insert(user model.User, password string) (model.UserID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", user)
+	ret := m.ctrl.Call(m, "Insert", user, password)
 	ret0, _ := ret[0].(model.UserID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockUserRepositoryMockRecorder) Insert(user interface{}) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) Insert(user, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), user, password)
 }
