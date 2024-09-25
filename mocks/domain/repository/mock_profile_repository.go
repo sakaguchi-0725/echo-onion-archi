@@ -63,21 +63,6 @@ func (mr *MockProfileRepositoryMockRecorder) FindAll() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockProfileRepository)(nil).FindAll))
 }
 
-// FindByEmail mocks base method.
-func (m *MockProfileRepository) FindByEmail(email string) (model.Profile, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByEmail", email)
-	ret0, _ := ret[0].(model.Profile)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByEmail indicates an expected call of FindByEmail.
-func (mr *MockProfileRepositoryMockRecorder) FindByEmail(email interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*MockProfileRepository)(nil).FindByEmail), email)
-}
-
 // FindByID mocks base method.
 func (m *MockProfileRepository) FindByID(id model.UserID) (model.Profile, error) {
 	m.ctrl.T.Helper()
@@ -94,16 +79,16 @@ func (mr *MockProfileRepositoryMockRecorder) FindByID(id interface{}) *gomock.Ca
 }
 
 // Insert mocks base method.
-func (m *MockProfileRepository) Insert(user model.Profile, password string) (model.Profile, error) {
+func (m *MockProfileRepository) Insert(profile model.Profile) (model.Profile, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", user, password)
+	ret := m.ctrl.Call(m, "Insert", profile)
 	ret0, _ := ret[0].(model.Profile)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Insert indicates an expected call of Insert.
-func (mr *MockProfileRepositoryMockRecorder) Insert(user, password interface{}) *gomock.Call {
+func (mr *MockProfileRepositoryMockRecorder) Insert(profile interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockProfileRepository)(nil).Insert), user, password)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockProfileRepository)(nil).Insert), profile)
 }
