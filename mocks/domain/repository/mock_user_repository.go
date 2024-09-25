@@ -34,40 +34,11 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 	return m.recorder
 }
 
-// DeleteByID mocks base method.
-func (m *MockUserRepository) DeleteByID(id model.UserID) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteByID", id)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DeleteByID indicates an expected call of DeleteByID.
-func (mr *MockUserRepositoryMockRecorder) DeleteByID(id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockUserRepository)(nil).DeleteByID), id)
-}
-
-// FindAll mocks base method.
-func (m *MockUserRepository) FindAll() ([]model.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindAll")
-	ret0, _ := ret[0].([]model.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindAll indicates an expected call of FindAll.
-func (mr *MockUserRepositoryMockRecorder) FindAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockUserRepository)(nil).FindAll))
-}
-
 // FindByEmail mocks base method.
-func (m *MockUserRepository) FindByEmail(email string) (model.User, error) {
+func (m *MockUserRepository) FindByEmail(email string) (model.UserID, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByEmail", email)
-	ret0, _ := ret[0].(model.User)
+	ret0, _ := ret[0].(model.UserID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -78,32 +49,17 @@ func (mr *MockUserRepositoryMockRecorder) FindByEmail(email interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*MockUserRepository)(nil).FindByEmail), email)
 }
 
-// FindByID mocks base method.
-func (m *MockUserRepository) FindByID(id model.UserID) (model.User, error) {
+// SaveCredentials mocks base method.
+func (m *MockUserRepository) SaveCredentials(email, password string) (model.UserID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByID", id)
-	ret0, _ := ret[0].(model.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByID indicates an expected call of FindByID.
-func (mr *MockUserRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockUserRepository)(nil).FindByID), id)
-}
-
-// Insert mocks base method.
-func (m *MockUserRepository) Insert(user model.User, password string) (model.UserID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", user, password)
+	ret := m.ctrl.Call(m, "SaveCredentials", email, password)
 	ret0, _ := ret[0].(model.UserID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Insert indicates an expected call of Insert.
-func (mr *MockUserRepositoryMockRecorder) Insert(user, password interface{}) *gomock.Call {
+// SaveCredentials indicates an expected call of SaveCredentials.
+func (mr *MockUserRepositoryMockRecorder) SaveCredentials(email, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), user, password)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCredentials", reflect.TypeOf((*MockUserRepository)(nil).SaveCredentials), email, password)
 }
