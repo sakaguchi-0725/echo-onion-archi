@@ -1,4 +1,17 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: develop
+    container_name: book-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/go/src/app
+    tty: true
+    depends_on:
+      - db
   db:
     image: postgres:16
     restart: always
