@@ -3,10 +3,12 @@ package persistence_test
 import (
 	"testing"
 
+	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
 	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func setupUserRepositoryTest() repository.UserRepository {
@@ -23,7 +25,7 @@ func TestUserRepository_Insert_Success(t *testing.T) {
 
 	insertedID, err := userRepo.Insert(userID, email, password)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, userID, insertedID)
 }
 
@@ -38,10 +40,15 @@ func TestUserRepository_Insert_DuplicateEmail(t *testing.T) {
 	_, _ = userRepo.Insert(userID, email, password)
 
 	// 2回目の挿入（重複エラー）
-	_, err := userRepo.Insert(userID, email, password)
+	userID2 := model.GenerateNewUserID()
+	_, err := userRepo.Insert(userID2, email, password)
 
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "SQLSTATE 23505")
+	require.Error(t, err)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	require.True(t, ok)
+	assert.Equal(t, apperr.ErrBadReqeust, appErr.Code)
+	assert.Equal(t, "This email address cannot be used", appErr.Message)
 }
 
 func TestUserRepository_FindByEmail_Success(t *testing.T) {
@@ -54,10 +61,11 @@ func TestUserRepository_FindByEmail_Success(t *testing.T) {
 	// データを事前に挿入
 	_, _ = userRepo.Insert(userID, email, password)
 
-	foundID, err := userRepo.FindByEmail(email)
+	foundUser, err := userRepo.FindByEmail(email)
 
-	assert.NoError(t, err)
-	assert.Equal(t, userID, foundID)
+	require.NoError(t, err)
+	assert.Equal(t, userID, foundUser.ID)
+	assert.Equal(t, email, foundUser.Email)
 }
 
 func TestUserRepository_FindByEmail_NotFound(t *testing.T) {
@@ -65,6 +73,10 @@ func TestUserRepository_FindByEmail_NotFound(t *testing.T) {
 
 	_, err := userRepo.FindByEmail("notfound@example.com")
 
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not found")
+	require.Error(t, err)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	require.True(t, ok)
+	assert.Equal(t, apperr.ErrNotFound, appErr.Code)
+	assert.Equal(t, "User with email notfound@example.com not found", appErr.Message)
 }

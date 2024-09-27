@@ -1,8 +1,10 @@
 package persistence_test
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
 	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence"
@@ -60,8 +62,12 @@ func TestProfileRepository_FindByID_NotFound(t *testing.T) {
 
 	_, err := profileRepo.FindByID(nonExistentID)
 
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not found")
+	require.Error(t, err)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	require.True(t, ok)
+	assert.Equal(t, apperr.ErrNotFound, appErr.Code)
+	assert.Equal(t, "Profile not found", appErr.Message)
 }
 
 func TestProfileRepository_FindAll(t *testing.T) {
@@ -112,8 +118,12 @@ func TestProfileRepository_DeleteByID_Success(t *testing.T) {
 	require.NoError(t, err)
 
 	_, err = profileRepo.FindByID(profileID)
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not found")
+	require.Error(t, err)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	require.True(t, ok)
+	assert.Equal(t, apperr.ErrNotFound, appErr.Code)
+	assert.Equal(t, "Profile not found", appErr.Message)
 }
 
 func TestProfileRepository_DeleteByID_NotFound(t *testing.T) {
@@ -123,6 +133,10 @@ func TestProfileRepository_DeleteByID_NotFound(t *testing.T) {
 
 	err := profileRepo.DeleteByID(nonExistentID)
 
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not found")
+	require.Error(t, err)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	require.True(t, ok)
+	assert.Equal(t, apperr.ErrNotFound, appErr.Code)
+	assert.Equal(t, fmt.Sprintf("Profile with ID %s not found", nonExistentID.String()), appErr.Message)
 }

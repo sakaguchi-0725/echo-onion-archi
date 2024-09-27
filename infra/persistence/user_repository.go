@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	domain "github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
 	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence/model"
@@ -18,29 +20,31 @@ func NewUserRepository(db *gorm.DB) repository.UserRepository {
 	return &userRepository{db}
 }
 
-func (u *userRepository) FindByEmail(email string) (domain.UserID, error) {
+func (u *userRepository) FindByEmail(email string) (domain.User, error) {
 	var model model.User
 
 	err := u.db.Where("email = ?", email).First(&model).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return domain.UserID(""), fmt.Errorf("user with email %s not found", email)
+			return domain.User{}, apperr.NewApplicationError(apperr.ErrNotFound, fmt.Sprintf("User with email %s not found", email), err)
 		}
-		return domain.UserID(""), fmt.Errorf("failed to retrieve user by email: %w", err)
+		return domain.User{}, apperr.NewApplicationError(apperr.ErrInternalError, "Failed to retrieve user by email", err)
 	}
 
-	return domain.UserID(model.ID), nil
+	user := domain.NewUser(domain.UserID(model.ID), model.Email, model.Password)
+
+	return user, nil
 }
 
 func (u *userRepository) Insert(id domain.UserID, email string, password string) (domain.UserID, error) {
 	user := model.NewUser(id, email, password)
 
 	if err := u.db.Create(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return domain.UserID(""), fmt.Errorf("user with email %s already exists: %w", email, err)
+		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
+			return domain.UserID(""), apperr.NewApplicationError(apperr.ErrBadReqeust, "This email address cannot be used", err)
 		}
-		return domain.UserID(""), fmt.Errorf("failed to insert user: %w", err)
+		return domain.UserID(""), apperr.NewApplicationError(apperr.ErrInternalError, "Failed to insert user", err)
 	}
 
 	return id, nil

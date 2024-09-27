@@ -46,8 +46,6 @@ func cleanUpTables(db *gorm.DB, tables ...string) {
 	for _, table := range tables {
 		if err := db.Exec("TRUNCATE TABLE " + table + " RESTART IDENTITY CASCADE").Error; err != nil {
 			log.Printf("Failed to clean up table %s: %v", table, err)
-		} else {
-			log.Printf("Successfully cleaned up table %s", table)
 		}
 	}
 }
