@@ -1,4 +1,4 @@
-package repository
+package persistence
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 
 	domain "github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
-	"github.com/sakaguchi-0725/echo-onion-arch/infra/repository/model"
+	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence/model"
 	"gorm.io/gorm"
 )
 

@@ -1,17 +1,17 @@
-package repository_test
+package persistence_test
 
 import (
 	"testing"
 
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
-	domain "github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
-	"github.com/sakaguchi-0725/echo-onion-arch/infra/repository"
+	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
+	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence"
 	"github.com/stretchr/testify/assert"
 )
 
-func setupUserRepositoryTest() domain.UserRepository {
+func setupUserRepositoryTest() repository.UserRepository {
 	cleanUpTables(testDB, "users")
-	return repository.NewUserRepository(testDB)
+	return persistence.NewUserRepository(testDB)
 }
 
 func TestUserRepository_Insert_Success(t *testing.T) {

@@ -1,18 +1,18 @@
-package repository_test
+package persistence_test
 
 import (
 	"testing"
 
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
-	domain "github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
-	"github.com/sakaguchi-0725/echo-onion-arch/infra/repository"
+	"github.com/sakaguchi-0725/echo-onion-arch/domain/repository"
+	"github.com/sakaguchi-0725/echo-onion-arch/infra/persistence"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func setupProfileRepository() domain.ProfileRepository {
+func setupProfileRepository() repository.ProfileRepository {
 	cleanUpTables(testDB, "profiles")
-	return repository.NewProfileRepository(testDB)
+	return persistence.NewProfileRepository(testDB)
 }
 
 func TestProfileRepository_Insert_Success(t *testing.T) {
