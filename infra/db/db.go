@@ -3,7 +3,7 @@ package db
 import (
 	"log"
 
-	"github.com/sakaguchi-0725/echo-onion-arch/infra/config"
+	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
