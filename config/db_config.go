@@ -2,10 +2,7 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type DBConfig struct {
@@ -17,10 +14,6 @@ type DBConfig struct {
 }
 
 func NewDBConfig() *DBConfig {
-	if err := godotenv.Load(); err != nil {
-		log.Println(".env is not found")
-	}
-
 	return &DBConfig{
 		Host:     os.Getenv("DB_HOST"),
 		Port:     os.Getenv("DB_PORT"),
