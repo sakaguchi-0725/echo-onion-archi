@@ -22,7 +22,7 @@ func NewTestDBConfig() *TestDBConfig {
 	}
 
 	return &TestDBConfig{
-		Host:     os.Getenv("TEST_DB_HOST"),
+		Host:     "5432",
 		Port:     os.Getenv("TEST_DB_PORT"),
 		User:     os.Getenv("TEST_DB_USER"),
 		Password: os.Getenv("TEST_DB_PASSWORD"),
