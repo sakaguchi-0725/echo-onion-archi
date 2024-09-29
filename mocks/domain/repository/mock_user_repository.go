@@ -35,10 +35,10 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // FindByEmail mocks base method.
-func (m *MockUserRepository) FindByEmail(email string) (model.UserID, error) {
+func (m *MockUserRepository) FindByEmail(email string) (model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByEmail", email)
-	ret0, _ := ret[0].(model.UserID)
+	ret0, _ := ret[0].(model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,17 +49,17 @@ func (mr *MockUserRepositoryMockRecorder) FindByEmail(email interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*MockUserRepository)(nil).FindByEmail), email)
 }
 
-// SaveCredentials mocks base method.
-func (m *MockUserRepository) SaveCredentials(email, password string) (model.UserID, error) {
+// Insert mocks base method.
+func (m *MockUserRepository) Insert(id model.UserID, email, password string) (model.UserID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveCredentials", email, password)
+	ret := m.ctrl.Call(m, "Insert", id, email, password)
 	ret0, _ := ret[0].(model.UserID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SaveCredentials indicates an expected call of SaveCredentials.
-func (mr *MockUserRepositoryMockRecorder) SaveCredentials(email, password interface{}) *gomock.Call {
+// Insert indicates an expected call of Insert.
+func (mr *MockUserRepositoryMockRecorder) Insert(id, email, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCredentials", reflect.TypeOf((*MockUserRepository)(nil).SaveCredentials), email, password)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserRepository)(nil).Insert), id, email, password)
 }
