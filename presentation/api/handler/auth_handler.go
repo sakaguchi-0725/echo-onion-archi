@@ -6,9 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/sakaguchi-0725/echo-onion-arch/application/usecase"
-	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	"github.com/sakaguchi-0725/echo-onion-arch/pkg/auth"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/dto"
 )
 

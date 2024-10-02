@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 )
 
 type JwtClaims struct {

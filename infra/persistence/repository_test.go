@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/infra/db"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 	"gorm.io/gorm"
 )
 

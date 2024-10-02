@@ -8,10 +8,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
-	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	mocks "github.com/sakaguchi-0725/echo-onion-arch/mocks/application/usecase"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/dto"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/handler"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/router"

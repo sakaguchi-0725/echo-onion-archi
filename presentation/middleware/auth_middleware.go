@@ -3,8 +3,8 @@ package middleware
 import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 )
 
 func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
