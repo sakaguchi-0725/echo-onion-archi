@@ -4,12 +4,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/sakaguchi-0725/echo-onion-arch/application/usecase"
 	"github.com/sakaguchi-0725/echo-onion-arch/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
-	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/auth"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/dto"
 )
 
@@ -43,7 +42,7 @@ func (a *authHandler) SignIn(c echo.Context) error {
 		return err
 	}
 
-	token, err := a.generateToken(userID)
+	token, err := auth.GenerateToken(userID)
 	if err != nil {
 		return err
 	}
@@ -68,7 +67,7 @@ func (a *authHandler) SignUpForAdmin(c echo.Context) error {
 		return err
 	}
 
-	token, err := a.generateToken(userID)
+	token, err := auth.GenerateToken(userID)
 	if err != nil {
 		return err
 	}
@@ -93,7 +92,7 @@ func (a *authHandler) SignUpForGeneral(c echo.Context) error {
 		return err
 	}
 
-	token, err := a.generateToken(userID)
+	token, err := auth.GenerateToken(userID)
 	if err != nil {
 		return err
 	}
@@ -101,24 +100,6 @@ func (a *authHandler) SignUpForGeneral(c echo.Context) error {
 	a.setAuthCookie(c, token)
 
 	return c.JSON(http.StatusOK, map[string]string{"message": "sign up successful"})
-}
-
-func (a *authHandler) generateToken(userID model.UserID) (string, error) {
-	claims := &dto.JwtClaims{
-		UserID: userID.String(),
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 12)),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	t, err := token.SignedString([]byte(a.config.JWTSecret))
-	if err != nil {
-		return "", err
-	}
-
-	return t, nil
 }
 
 func (a *authHandler) setAuthCookie(c echo.Context, token string) {
