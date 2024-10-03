@@ -23,8 +23,3 @@ func NewConfig() *Config {
 		DB:  NewDBConfig(),
 	}
 }
-
-func GetJWTSecret() string {
-	cfg := NewConfig()
-	return cfg.App.JWTSecret
-}

@@ -32,6 +32,6 @@ func main() {
 		AuthHandler: authHandler,
 	}
 
-	router.NewRouter(e, deps)
+	router.NewRouter(e, deps, *cfg.App)
 	e.Start(":8080")
 }
