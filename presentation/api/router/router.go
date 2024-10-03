@@ -5,16 +5,18 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/handler"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/validator"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/middleware"
 )
 
 type HandlerDependencies struct {
-	AuthHandler handler.AuthHandler
+	AuthHandler    handler.AuthHandler
+	ProfileHandler handler.ProfileHandler
 }
 
-func NewRouter(e *echo.Echo, deps *HandlerDependencies) {
+func NewRouter(e *echo.Echo, deps *HandlerDependencies, config config.AppConfig) {
 	e.Validator = validator.NewValidator()
 
 	e.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
@@ -38,4 +40,8 @@ func NewRouter(e *echo.Echo, deps *HandlerDependencies) {
 	e.POST("/signin", deps.AuthHandler.SignIn)
 	e.POST("/signup", deps.AuthHandler.SignUpForGeneral)
 	e.POST("/signup/admin", deps.AuthHandler.SignUpForAdmin)
+
+	p := e.Group("/profile")
+	p.Use(middleware.AuthMiddleware(config.JWTSecret))
+	p.GET("", deps.ProfileHandler.GetProfile)
 }

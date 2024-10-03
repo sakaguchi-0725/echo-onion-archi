@@ -25,13 +25,16 @@ func main() {
 	profileRepo := persistence.NewProfileRepository(db)
 
 	authUsecase := usecase.NewAuthUsecase(userRepo, profileRepo)
+	profileUsecase := usecase.NewProfileUsecase(profileRepo)
 
 	authHandler := handler.NewAuthHandler(authUsecase, cfg.App)
+	profileHandler := handler.NewProfileHandler(profileUsecase)
 
 	deps := &router.HandlerDependencies{
-		AuthHandler: authHandler,
+		AuthHandler:    authHandler,
+		ProfileHandler: profileHandler,
 	}
 
-	router.NewRouter(e, deps)
+	router.NewRouter(e, deps, *cfg.App)
 	e.Start(":8080")
 }
