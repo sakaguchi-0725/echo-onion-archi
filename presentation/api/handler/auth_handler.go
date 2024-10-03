@@ -42,7 +42,7 @@ func (a *authHandler) SignIn(c echo.Context) error {
 		return err
 	}
 
-	token, err := auth.GenerateToken(userID)
+	token, err := auth.GenerateToken(userID, a.config.JWTSecret)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (a *authHandler) SignUpForAdmin(c echo.Context) error {
 		return err
 	}
 
-	token, err := auth.GenerateToken(userID)
+	token, err := auth.GenerateToken(userID, a.config.JWTSecret)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (a *authHandler) SignUpForGeneral(c echo.Context) error {
 		return err
 	}
 
-	token, err := auth.GenerateToken(userID)
+	token, err := auth.GenerateToken(userID, a.config.JWTSecret)
 	if err != nil {
 		return err
 	}

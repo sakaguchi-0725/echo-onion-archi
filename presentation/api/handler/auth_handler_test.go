@@ -11,11 +11,9 @@ import (
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/apperr"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
 	mocks "github.com/sakaguchi-0725/echo-onion-arch/mocks/application/usecase"
-	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/dto"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/handler"
 	"github.com/sakaguchi-0725/echo-onion-arch/presentation/api/router"
-	"github.com/sakaguchi-0725/echo-onion-arch/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,13 +21,11 @@ import (
 func setupAuthHandler(t *testing.T) (*mocks.MockAuthUsecase, *echo.Echo) {
 	ctrl := gomock.NewController(t)
 	authUsecase := mocks.NewMockAuthUsecase(ctrl)
-	authHandler := handler.NewAuthHandler(authUsecase, config.NewConfig().App)
+	authHandler := handler.NewAuthHandler(authUsecase, &cfg)
 
 	e := echo.New()
-	deps := router.HandlerDependencies{
-		AuthHandler: authHandler,
-	}
-	router.NewRouter(e, &deps)
+	deps := NewMockHandlersDependency(ctrl, SetAuthHandler(authHandler))
+	router.NewRouter(e, deps, cfg)
 
 	t.Cleanup(func() {
 		ctrl.Finish()
@@ -53,7 +49,7 @@ func TestAuthHandler_SignIn_Success(t *testing.T) {
 	reqBody, err := json.Marshal(signInRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
 
 	authUsecase.EXPECT().SignIn(email, password).Return(expectedUserID, nil)
 
@@ -77,7 +73,7 @@ func TestAuthHandler_SignIn_BadRequest(t *testing.T) {
 	reqBody, err := json.Marshal(signInRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
 
 	e.ServeHTTP(rec, req)
 
@@ -103,7 +99,7 @@ func TestAuthHandler_SignIn_Unauhorized(t *testing.T) {
 	reqBody, err := json.Marshal(signInReqest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signin", string(reqBody))
 
 	authUsecase.EXPECT().SignIn(email, password).Return(model.UserID(""), apperr.NewApplicationError(apperr.ErrUnauthorized, "Authentication failed. Please check your email and password.", errors.New("error")))
 	e.ServeHTTP(rec, req)
@@ -133,7 +129,7 @@ func TestAuthHandler_SignUpForAdmin_Success(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
 
 	authUsecase.EXPECT().SignUpForAdmin(name, email, password).Return(expectedID, nil)
 
@@ -159,7 +155,7 @@ func TestAuthHandler_SignUpForAdmin_InvalidInput(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
 	e.ServeHTTP(rec, req)
 
 	assert.Equal(t, http.StatusBadRequest, rec.Code)
@@ -186,7 +182,7 @@ func TestAuthHandler_SignUpForAdmin_BadRequest(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup/admin", string(reqBody))
 
 	authUsecase.EXPECT().SignUpForAdmin(name, email, password).Return(model.UserID(""), apperr.NewApplicationError(apperr.ErrBadReqeust, "This email address cannot be used", errors.New("error")))
 
@@ -217,7 +213,7 @@ func TestAuthHandler_SignUpForGeneral_Success(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
 
 	authUsecase.EXPECT().SignUpForGeneral(name, email, password).Return(expectedID, nil)
 
@@ -243,7 +239,7 @@ func TestAuthHandler_SignUpForGeneral_InvalidInput(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
 
 	e.ServeHTTP(rec, req)
 
@@ -271,7 +267,7 @@ func TestAuthHandler_SignUpForGeneral_BadRequest(t *testing.T) {
 	reqBody, err := json.Marshal(signUpRequest)
 	require.NoError(t, err)
 
-	rec, req := test.SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
+	rec, req := SetupRequest(e, http.MethodPost, "/signup", string(reqBody))
 
 	authUsecase.EXPECT().SignUpForGeneral(name, email, password).Return(model.UserID(""), apperr.NewApplicationError(apperr.ErrBadReqeust, "This email address cannot be used", errors.New("error")))
 

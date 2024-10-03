@@ -5,7 +5,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sakaguchi-0725/echo-onion-arch/domain/model"
-	"github.com/sakaguchi-0725/echo-onion-arch/pkg/config"
 )
 
 type JwtClaims struct {
@@ -13,7 +12,7 @@ type JwtClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(userID model.UserID) (string, error) {
+func GenerateToken(userID model.UserID, secretKey string) (string, error) {
 	claims := &JwtClaims{
 		UserID: userID.String(),
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -23,7 +22,7 @@ func GenerateToken(userID model.UserID) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	t, err := token.SignedString([]byte(config.GetJWTSecret()))
+	t, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err
 	}
