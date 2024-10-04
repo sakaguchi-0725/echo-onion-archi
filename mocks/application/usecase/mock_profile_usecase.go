@@ -34,6 +34,21 @@ func (m *MockProfileUsecase) EXPECT() *MockProfileUsecaseMockRecorder {
 	return m.recorder
 }
 
+// FindAll mocks base method.
+func (m *MockProfileUsecase) FindAll() ([]dto.ProfileOutput, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindAll")
+	ret0, _ := ret[0].([]dto.ProfileOutput)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAll indicates an expected call of FindAll.
+func (mr *MockProfileUsecaseMockRecorder) FindAll() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockProfileUsecase)(nil).FindAll))
+}
+
 // FindByUserID mocks base method.
 func (m *MockProfileUsecase) FindByUserID(userID string) (dto.ProfileOutput, error) {
 	m.ctrl.T.Helper()

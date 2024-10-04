@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -73,4 +74,44 @@ func TestProfileUsecase_FindByUserID_NotFound(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, apperr.ErrNotFound, appErr.Code)
 	assert.Equal(t, "Profile not found", appErr.Message)
+}
+
+func TestProfileUsecase_FindAll_Success(t *testing.T) {
+	profileUsecase, profileRepo := setupProfileUsecase(t)
+	expectProfile := []model.Profile{
+		{
+			UserID: model.GenerateNewUserID(),
+			Name:   "John",
+			Role:   model.Admin,
+		},
+		{
+			UserID: model.GenerateNewUserID(),
+			Name:   "Mike",
+			Role:   model.General,
+		},
+	}
+
+	profileRepo.EXPECT().FindAll().Return(expectProfile, nil)
+
+	output, err := profileUsecase.FindAll()
+	assert.NoError(t, err)
+	assert.Equal(t, expectProfile[0].Name, output[0].Name)
+	assert.Equal(t, expectProfile[0].Role.String(), output[0].Role)
+	assert.Equal(t, expectProfile[1].Name, output[1].Name)
+	assert.Equal(t, expectProfile[1].Role.String(), output[1].Role)
+}
+
+func TestProfileUsecase_FindAll_Failure(t *testing.T) {
+	profileUsecase, profileRepo := setupProfileUsecase(t)
+
+	profileRepo.EXPECT().FindAll().Return([]model.Profile{}, apperr.NewApplicationError(apperr.ErrInternalError, "Failed to retrieve profiles", errors.New("error")))
+
+	output, err := profileUsecase.FindAll()
+	assert.Error(t, err)
+	assert.Equal(t, []dto.ProfileOutput{}, output)
+
+	appErr, ok := err.(*apperr.ApplicationError)
+	assert.True(t, ok)
+	assert.Equal(t, apperr.ErrInternalError, appErr.Code)
+	assert.Equal(t, "Failed to retrieve profiles", appErr.Message)
 }

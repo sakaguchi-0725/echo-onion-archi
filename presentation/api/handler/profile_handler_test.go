@@ -87,3 +87,68 @@ func TestProfileHandler_GetProfile_InvalidUserID(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, rec.Code)
 	assert.JSONEq(t, expectedRes, rec.Body.String())
 }
+
+func TestProfileHandler_GetAllProfiles_Success(t *testing.T) {
+	profileUsecase, e := setupProfileHandler(t)
+	usecaseOutput := []dto.ProfileOutput{
+		{
+			Name: "John",
+			Role: "admin",
+		},
+		{
+			Name: "Mike",
+			Role: "general",
+		},
+	}
+
+	profileUsecase.EXPECT().FindAll().Return(usecaseOutput, nil)
+
+	token, err := auth.GenerateToken(model.GenerateNewUserID(), cfg.JWTSecret)
+	require.NoError(t, err)
+
+	rec, req := SetupRequest(e, http.MethodGet, "/profile/all", "")
+	req.AddCookie(&http.Cookie{
+		Name:  "access_token",
+		Value: token,
+	})
+	e.ServeHTTP(rec, req)
+
+	expectedRes := `[
+		{
+			"name": "John",
+			"role": "admin"
+		},
+		{
+			"name": "Mike",
+			"role": "general"
+		}
+	]`
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.JSONEq(t, expectedRes, rec.Body.String())
+}
+
+func TestProfileHandler_GetAllProfiles_Failure(t *testing.T) {
+	profileUsecase, e := setupProfileHandler(t)
+	userID := model.GenerateNewUserID()
+
+	profileUsecase.EXPECT().FindAll().Return([]dto.ProfileOutput{}, apperr.NewApplicationError(apperr.ErrInternalError, "Failed to retrieve profiles", errors.New("error")))
+
+	token, err := auth.GenerateToken(userID, cfg.JWTSecret)
+	require.NoError(t, err)
+
+	rec, req := SetupRequest(e, http.MethodGet, "/profile/all", "")
+	req.AddCookie(&http.Cookie{
+		Name:  "access_token",
+		Value: token,
+	})
+	e.ServeHTTP(rec, req)
+
+	expectedRed := `{
+		"code": "InternalServerError",
+		"message": "Failed to retrieve profiles"
+	}`
+
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
+	assert.JSONEq(t, expectedRed, rec.Body.String())
+}

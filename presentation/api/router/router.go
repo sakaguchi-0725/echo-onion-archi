@@ -44,4 +44,5 @@ func NewRouter(e *echo.Echo, deps *HandlerDependencies, config config.AppConfig)
 	p := e.Group("/profile")
 	p.Use(middleware.AuthMiddleware(config.JWTSecret))
 	p.GET("", deps.ProfileHandler.GetProfile)
+	p.GET("/all", deps.ProfileHandler.GetAllProfiles)
 }
