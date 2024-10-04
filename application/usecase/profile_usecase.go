@@ -10,6 +10,7 @@ import (
 
 type ProfileUsecase interface {
 	FindByUserID(userID string) (dto.ProfileOutput, error)
+	FindAll() ([]dto.ProfileOutput, error)
 }
 
 type profileUsecase struct {
@@ -35,4 +36,22 @@ func (p *profileUsecase) FindByUserID(userID string) (dto.ProfileOutput, error) 
 		Name: profile.Name,
 		Role: profile.Role.String(),
 	}, nil
+}
+
+func (p *profileUsecase) FindAll() ([]dto.ProfileOutput, error) {
+	profiles, err := p.repo.FindAll()
+	if err != nil {
+		return []dto.ProfileOutput{}, err
+	}
+
+	output := make([]dto.ProfileOutput, len(profiles))
+	for i, v := range profiles {
+		p := dto.ProfileOutput{
+			Name: v.Name,
+			Role: v.Role.String(),
+		}
+		output[i] = p
+	}
+
+	return output, nil
 }

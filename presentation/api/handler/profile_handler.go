@@ -10,6 +10,7 @@ import (
 
 type ProfileHandler interface {
 	GetProfile(c echo.Context) error
+	GetAllProfiles(c echo.Context) error
 }
 
 type profileHandler struct {
@@ -31,6 +32,25 @@ func (p *profileHandler) GetProfile(c echo.Context) error {
 	res := dto.ProfileResponse{
 		Name: profile.Name,
 		Role: profile.Role,
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (p *profileHandler) GetAllProfiles(c echo.Context) error {
+	profiles, err := p.usecase.FindAll()
+	if err != nil {
+		return err
+	}
+
+	res := make([]dto.ProfileResponse, len(profiles))
+	for i, v := range profiles {
+		p := dto.ProfileResponse{
+			Name: v.Name,
+			Role: v.Role,
+		}
+
+		res[i] = p
 	}
 
 	return c.JSON(http.StatusOK, res)
